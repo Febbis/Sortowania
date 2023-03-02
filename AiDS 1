@@ -1,3 +1,14 @@
+Implementacja algorytmów sortowania w języku C/C++ oraz sprawdzenie czy 
+algorytm jest stabilny, czy cechuje się zachowaniem naturalnym.
+Również badanie ich rzędu złożoność czasowej średniej i pesymistycznej. 
+Użyte algorytmy:
+ Sortowanie bąbelkowe
+ Sortowanie przez proste wybieranie
+ Sortowanie przez proste wstawianie
+ Sortowanie Shella
+ Sortowanie szybkie
+ Sortowanie domyślne std::sort
+
 #include <iostream>
 #include <chrono>
 #include <random>
