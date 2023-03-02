@@ -1,0 +1,98 @@
+#include<iostream>
+#include<algorithm>
+#include<chrono>
+#include<random>
+
+
+using namespace std;
+int licz = 0;
+
+/*/int h1(int x, int m) {
+	return x % m;
+}
+int h2(int x, int m) {
+	return(((x / m) % (m / 2)) * 2) + 1;
+}
+int h(int m, int x, int i) {
+	return (h1(x, m) + i * h2(x, m)) % m;
+}*/
+
+/*/h(x, i) = (h1(x) + i*h2(x)) mod m dla: i = 0, 1, 2, . . . , m − 1,
+h1(x) = x mod m,
+h2(x) = (((x / m) mod(m / 2)) * 2) + 1.*/
+
+int h(int m, int x, int i) {
+	if (i == 0)
+		return x % m;
+	else
+		return (h(m, x, 0) + i) % m;
+}
+bool hash_al_wstaw(int m, int tablica[], int x) {
+	for (int i = 0; i < m - 1; i++) {
+		int k;
+		licz++;
+		k = h(m, x, i);
+		if (tablica[k] == -1) {
+			tablica[k] = x;
+			return true;
+		}
+	}
+}
+bool hash_al_szukaj(int* tablica, int m, int x) {
+	for (int i = 0; i < m - 1; i++) {
+		int k = h(m, x, i);
+		licz++;
+		if (tablica[k] == x){
+			return true;
+		}
+		if (tablica[k] == -1) {
+			return false;
+		}
+	}
+	return false;
+}
+int losowa_liczba(int min, int max) {
+	static std::default_random_engine gen(std::random_device{}());
+	static std::uniform_int_distribution<int> dist;
+	return dist(gen, std::uniform_int_distribution<int>::param_type{ min, max });
+}
+
+int main() {
+	static int m = 1048576;
+	int* tablica = new int[m];
+
+	static int rozmiar = 12000000;
+	int* zbior = new int[rozmiar];
+
+	for (int i = 0; i < rozmiar; i++)
+		zbior[i] = i;
+
+	random_shuffle(zbior, zbior + rozmiar);
+
+	int pomiary[10];
+
+	cout << "%\tCzas\t\tI.powtorzen" << endl;
+
+	for (int p = 0; p < 10; p++) {
+
+	for (int i = 0; i < m; i++)
+			tablica[i] = -1;
+	pomiary[p] = (m / 10) * p;
+	for (int i = pomiary[0]; i < pomiary[p]; i++) {
+		hash_al_wstaw(m, tablica, zbior[i]);
+	}
+	licz = 0;
+	auto start = std::chrono::high_resolution_clock::now();
+	for (int j = pomiary[p]; j < pomiary[p] + 10000; j++){
+		int losowa = losowa_liczba(0, pomiary[p]);
+	hash_al_szukaj(tablica, m, zbior[losowa]);
+	}	
+
+
+	//tutaj mierzona operacja
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::micro> duration = end - start;
+	std::cerr <<p + 1<< ". " << duration.count() << "us  \t" << licz<< endl;;
+	}
+	
+}
