@@ -1,3 +1,7 @@
+Implementacja w C/C++ tablicy mieszającej (wspierającej operację wstaw i szukaj) z 
+wykorzystaniem różnych funkcji mieszających oraz zbadanie praktycznego zachowania 
+utworzonej struktury.
+
 #include<iostream>
 #include<algorithm>
 #include<chrono>
